@@ -9,42 +9,33 @@ const veldHoogte = 720;
 const aantalBalletjes = 5;
 var balletjes = [];
 
-function randomNummer(o,b) {
-  return Math.floor(Math.random() * (b - o + 1) + o);
-}
 
 var nextID = 0;
 
 class Balletje {
   constructor() {
-    this.x = randomNummer(0,veldBreedte);
-    this.y = randomNummer(0,veldHoogte);
-    this.snelheidX = randomNummer(5,6);
-    this.snelheidY = randomNummer(5,6);
-    this.straal = randomNummer(50,100);
-    this.kleur = [randomNummer(0,255),randomNummer(0,255),randomNummer(0,255)];
+    this.x = random(100,veldBreedte - 100);
+    this.y = random(100,veldHoogte - 100);
+    this.snelheidX = random(5,6);
+    this.snelheidY = random(5,6);
+    this.straal = random(50,100);
+    this.kleur = [random(0,255),random(0,255),random(0,255)];
     this.id = nextID++;
   }
 
   update() {
     // collison met randen
     var collideOnder = collideLineCircle(0,veldHoogte,veldBreedte,veldHoogte,this.x,this.y,this.straal);
-    if(collideOnder) {
-      this.snelheidY = -this.snelheidY;
-    }
-
     var collideBoven = collideLineCircle(0,0,veldBreedte,0,this.x,this.y,this.straal);
-    if(collideBoven) {
+    if(collideOnder || collideBoven) {
       this.snelheidY = -this.snelheidY;
     }
 
-    if(this.x >= veldBreedte || this.x <= 0) {
+    var collideLinks = collideLineCircle(0,0,0,veldHoogte,this.x,this.y,this.straal);
+    var collideRechts = collideLineCircle(veldBreedte,0,veldBreedte,veldHoogte,this.x,this.y,this.straal);
+    if(collideLinks || collideRechts) {
       this.snelheidX = -this.snelheidX;
     }
-    // if(this.y >= veldHoogte || this.y <= 0) {
-    //   this.snelheidY = -this.snelheidY;
-    // }
-
     
     // collison met andere bal
     var collide = false;
@@ -77,10 +68,10 @@ class Balletje {
 }
 
 // function balletjeToevoegen() {
-//   var x = randomNummer(0,veldBreedte);
-//   var y = randomNummer(0,veldHoogte);
-//   var snelheidX = randomNummer(1,4);
-//   var snelheidY = randomNummer(1,4);
+//   var x = random(0,veldBreedte);
+//   var y = random(0,veldHoogte);
+//   var snelheidX = random(1,4);
+//   var snelheidY = random(1,4);
 //   balletjes.push([x,y,snelheidX,snelheidY]);
 // }
 
